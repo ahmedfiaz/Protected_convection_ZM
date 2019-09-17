@@ -1,0 +1,17 @@
+! Users should add all user specific namelist changes below in the form of 
+! namelist_var = new_namelist_value 
+
+ avgflag_pertape='A'
+ nhtfrq = -24
+ mfilt = 30
+
+fincl1 = 'U','V','T','Q','PRECC','PRECT','TMQ','PS','SL','Z3','CAPE','UCAPE','ZMMU','ZMMD','PRECCDZM'
+fexcl1 = 'CCN3','AQRAIN','CAPE','CDNUMC','CLDHGH','CLDICE','CLDLIQ','CLDLOW','CLDMED','CLDTOT','CLOUD','DMS_SRF','FICE','FREQI','FREQL','FREQR','FREQS','ICEFRAC','ICIMR','ICWMR','IWC','LANDFRAC','NUMICE','NUMLIQ','OCNFRAC','QREFHT','SOAG_SRF','SOLIN','TGCLDCWP','TGCLDIWP','TGCLDLWP','soa_a2_SRF','soa_a1_SRF','so4_a3_SRF','so4_a2_SRF','so4_a1_SRF','qtten_PBL','pom_a1_SRF','num_a3_SRF','num_a2_SRF','num_a1_SRF','ncl_a1_SRF','ncl_a2_SRF','ncl_a3_SRF','dst_a1_SRF','dst_a3_SRF','bc_a1_SRF','dst_a1SF','dst_a3SF','WSUB','WGUSTD','VV','VU','VT','VQ','VD01','UU','U10','TSMX','TSMN','TREFHT','SO2_SRF','SNOWHLND','SNOWHICE','H2O2_SRF','H2SO4_SRF','AEROD_v','ANRAIN','ANSNOW','AODDUST1','AODDUST3','AODVIS','AQSNOW','AREI','AREL','AWNC','AWNI','BURDEN1','BURDEN2','BURDEN3','BURDENBC','BURDENDUST','BURDENPOM','BURDENSEASALT','BURDENSO4','BURDENSOA', 'FLNS', 'FSNS', 'FSNTOA','TAUX','TAUY','EMISCLD','FLDS','FLNSC','FLNT','FLNTC','FLUT','FLUTC','FSDS','FSDSC','FSNSC','FSNT','FSNTC','FSNTOAC','FSUTOA','LWCF','OMEGAT','ORO','PBLH','RELHUM','DCQ','DTCOND','DTV','LHFLX','QFLX','QRL','QRS','SHFLX','SWCF'
+
+hfilename_spec= '/output_directory/filename_%y_%m_%d.nc'
+
+&zmconv_nl
+  zmconv_procon_closure  =  .TRUE.
+  zmconv_procon_cldprp   =  .TRUE.
+/
+
