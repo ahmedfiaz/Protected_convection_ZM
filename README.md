@@ -16,3 +16,9 @@ protections in two separate places within the code.
   inverting the plume entropy to deduce temperature. In these cases, the code uses Halley's method (which has not yet failed).
   
   Search for !FA within the code to examine all the modifications. 
+  
+  To run these codes in your version of CAM/CEMS. Place 
+   
+   i) user_nl_cam in your case directory (CASE_DIR)
+   ii)namelist_definition.xml, zm_conv.F90 and zm_conv_intr.F90 in CASE_DIR/SourceMods/src.cam,
+   and build.
