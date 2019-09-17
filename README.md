@@ -8,9 +8,9 @@ The code works by asking if the current location is inside a protected location.
 protections in two separate places within the code. 
 
   i) Transform the entraining CAPE closure (Neale et al. 2012) back into an undilute CAPE 
-      in the subroutine 'closure. (easy) 
+      in the subroutine 'closure'. 
       
-  ii) Make the updrafts and downdrafts interact with saturated air in the subroutine 'cldprp' (less easy). 
+  ii) Make the updrafts and downdrafts interact with saturated air in the subroutine 'cldprp'. 
   
   Also, the code uses Newton's method, which sometimes fails to converge when 
   inverting the plume entropy to deduce temperature. In these cases, the code uses Halley's method (which has not yet failed).
