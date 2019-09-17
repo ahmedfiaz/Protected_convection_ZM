@@ -20,5 +20,6 @@ protections in two separate places within the code.
   To run these codes in your version of CAM/CEMS. Place 
    
    i) user_nl_cam in your case directory (CASE_DIR)
+   
    ii)namelist_definition.xml, zm_conv.F90 and zm_conv_intr.F90 in CASE_DIR/SourceMods/src.cam,
    and build.
