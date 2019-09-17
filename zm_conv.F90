@@ -180,9 +180,6 @@ subroutine check_inbnds(lchnk,ncol,isinbnds)
 
    use phys_control, only: cam_physpkg_is
 
-   !FA = 12/27/17
-   !FA = 11/29/18
-
    use shr_const_mod, only : pi => shr_const_pi
    use phys_grid, only:  get_rlat_all_p, get_rlon_all_p
  
@@ -518,25 +515,6 @@ subroutine zm_convr(lchnk   ,ncol    , &
    real(r8) sdifr
    
    !! FA: set variables for protected convection
-
-!    real(r8) tdifr
-!    real(r8) that(pcols,pver)           ! wg grid slice of upper interface temperature.
-! 
-!    integer nbnds          ! Number of protected regions
-!    real(r8) rlat_n            ! FA - lat/lon limits for region of convection suppression.
-!    real(r8) rlat_s
-!    real(r8) rlon_e
-!    real(r8) rlon_w
-!    
-!    real(r8), dimension(97):: lat_n,lat_s,lon_e,lon_w
-! 
-!    real(r8) rlon(pcols)               ! FA - lat/lon limits
-!    real(r8) rlat(pcols)        
-!    real(r8),parameter :: d2r = pi/180._r8 ! RBN deg->rad conversion factors
-!    real(r8),parameter :: r2d = 180._r8/pi ! RBN rad->deg conversion factors
-!    
-!    integer jj
-   
    logical isinbnds(pcols) ! Logical array that determines if currently within protected
    						   ! region or not
    logical isinbndsg(pcols) ! gathered isinbnds array 
@@ -545,41 +523,7 @@ subroutine zm_convr(lchnk   ,ncol    , &
    isinbndsg=.FALSE.
 
 if (procon_closure) call check_inbnds(lchnk,ncol,isinbnds)
-   
-! 	lat_n=(/15.0, 22.5, 37.5, 27.5, 27.5, 26.5, 29.5, 26.5, 35.0, 20.0, 12.5, 5.0, -5.0, -15.0, -25.0, -25.0, -15.0, -5.0, 5.0, -25.0, -15.0, -5.0, 5.0, -15.0, -25.0, -15.0, -7.5, 2.5, 12.5, 22.5, 32.5, -25.0, -15.0, -7.5, 2.5, 12.5, 22.5, 12.5, 2.5, -7.5, -15.0, -25.0, -15.0, -7.5, 2.5, 12.5, 22.5, 18.5, 27.5, 32.5, 17.5, 25.0, 5.0, 5.0, -5.0, -5.0, -15.0, -25.0, 17.5, 25.0, 5.0, -5.0, -15.0, -25.0, -15.0, -25.0, 7.5, 1.5, -5.0, -25.0, 7.5, 17.5, 27.5, 17.5, 7.5, -2.5, -12.5, -22.5, -22.5, -12.5, -2.5, 7.5, 17.5, 27.5, 27.5, 27.5, 17.5, 7.5, -2.5, -12.5, -22.5, 27.5, 17.5, 7.5, -2.5, -12.5, -22.5/)
-! 	lat_s=(/12.5, 20.0, 35.0, 25.0, 25.0, 24.0, 27.0, 24.0, 32.5, 17.5, 10.0, 2.5, -7.5, -17.5, -27.5, -27.5, -17.5, -7.5, 2.5, -27.5, -17.5, -7.5, 2.5, -17.5, -27.5, -17.5, -10.0, 0.0, 10.0, 20.0, 30.0, -27.5, -17.5, -10.0, 0.0, 10.0, 20.0, 10.0, 0.0, -10.0, -17.5, -27.5, -17.5, -10.0, 0.0, 10.0, 20.0, 16.0, 25.0, 30.0, 15.0, 22.5, 2.5, 2.5, -7.5, -7.5, -17.5, -27.5, 15.0, 22.5, 2.5, -7.5, -17.5, -27.5, -17.5, -27.5, 5.0, -1.0, -7.5, -27.5, 5.0, 15.0, 25.0, 15.0, 5.0, -5.0, -15.0, -25.0, -25.0, -15.0, -5.0, 5.0, 15.0, 25.0, 25.0, 25.0, 15.0, 5.0, -5.0, -15.0, -25.0, 25.0, 15.0, 5.0, -5.0, -15.0, -25.0/)
-! 	lon_e=(/310.0, 300.0, 290.0, 290.0, 282.5, 272.5, 257.5, 245.0, 237.5, 237.5, 252.5, 237.5, 245.0, 237.5, 245.0, 260.0, 270.0, 260.0, 270.0, 277.5, 290.0, 300.0, 290.0, 310.0, 325.0, 320.0, 325.0, 320.0, 325.0, 320.0, 325.0, 335.0, 342.5, 335.0, 342.5, 335.0, 342.5, 347.5, 357.5, 7.5, 357.5, 7.5, 20.0, 30.0, 20.0, 30.0, 20.0, 41.5, 52.5, 42.5, 70.0, 77.5, 77.5, 57.5, 50.0, 70.0, 77.5, 70.0, 90.0, 97.5, 97.5, 90.0, 97.5, 90.0, 117.5, 110.0, 110.0, 114.5, 132.5, 132.5, 142.5, 142.5, 142.5, 152.5, 162.5, 152.5, 162.5, 152.5, 172.5, 180.0, 172.5, 180.0, 172.5, 180.0, 162.5, 192.5, 202.5, 192.5, 202.5, 192.5, 202.5, 212.5, 222.5, 212.5, 222.5, 212.5, 222.5/)
-! 	lon_w=(/307.5, 297.5, 287.5, 287.5, 280.0, 270.0, 255.0, 242.5, 235.0, 235.0, 250.0, 235.0, 242.5, 235.0, 242.5, 257.5, 267.5, 257.5, 267.5, 275.0, 287.5, 297.5, 287.5, 307.5, 322.5, 317.5, 322.5, 317.5, 322.5, 317.5, 322.5, 332.5, 340.0, 332.5, 340.0, 332.5, 340.0, 345.0, 355.0, 5.0, 355.0, 5.0, 17.5, 27.5, 17.5, 27.5, 17.5, 39.0, 50.0, 40.0, 67.5, 75.0, 75.0, 55.0, 47.5, 67.5, 75.0, 67.5, 87.5, 95.0, 95.0, 87.5, 95.0, 87.5, 115.0, 107.5, 107.5, 112.0, 130.0, 130.0, 140.0, 140.0, 140.0, 150.0, 160.0, 150.0, 160.0, 150.0, 170.0, 177.5, 170.0, 177.5, 170.0, 177.5, 160.0, 190.0, 200.0, 190.0, 200.0, 190.0, 200.0, 210.0, 220.0, 210.0, 220.0, 210.0, 220.0/)
-! 
-! 
-! 	lat_n=lat_n*d2r
-! 	lat_s=lat_s*d2r
-! 	lon_e=lon_e*d2r
-! 	lon_w=lon_w*d2r
-! 
-! 	nbnds=size(lat_n)
-! 
-! 	call get_rlat_all_p(lchnk, ncol, rlat)  ! In radians
-! 	call get_rlon_all_p(lchnk, ncol, rlon)
-! 
-! 	   do i=1,ncol 
-! 		do jj=1,nbnds 
-! 	
-! 		  if ((rlat(i) <= lat_n(jj)) .and. & 
-! 			  (rlat(i) >= lat_s(jj)) .and. & 
-! 			  (rlon(i) <= lon_e(jj)) .and. &
-! 			  (rlon(i) >= lon_w(jj))) then
-! 			  isinbnds(i) = .TRUE.  
-! 			  EXIT
-! 		else
-! 			isinbnds(i) = .FALSE.  ! isinbnds is true for protected and false for 
-! 								   ! unprotected region
-! 		  endif
-! 		enddo
-! 	   enddo
-!    
-! endif
-
+  
 !--------------------------Data statements------------------------------
 !
 ! Set internal variable "msg" (convection limit) to "limcnv-1"
@@ -690,23 +634,9 @@ if (procon_closure) call check_inbnds(lchnk,ncol,isinbnds)
       !  Evaluate Tparcel, qs(Tparcel), buoyancy and CAPE, 
       !     lcl, lel, parcel launch level at index maxi()=hmax
 
-!       call buoyan_dilute(lchnk   ,ncol    , &
-!                   q       ,t       ,p       ,z       ,pf       , &
-!                   tp      ,qstp    ,tl      ,rl      ,cape     , &
-!                   pblt    ,lcl     ,lel     ,lon     ,maxi     , &
-!                   rgas    ,grav    ,cpres   ,msg     , &
-!                   tpert   )
+!! FA
 
-! FA
-
-      !FA: compute the undilute/protected CAPE from the thermodynamic profiles 
-! 	  call buoyan_undilute(lchnk   ,ncol    , &
-! 			  q       ,t       ,p       ,z       ,pf       , &
-! 			  rl      ,cape_undilute     , &
-! 			  pblt    ,lcl     ,lel     ,lon     ,maxi     , &
-! 			  rgas    ,grav    ,cpres   ,msg     , &
-! 			  tpert   )
-			  
+  		  
 	  call buoyan_undilute(lchnk   ,ncol    , &
                   q       ,t       ,p       ,z       ,pf      , &
                   rl      ,cape_undilute    , &
@@ -1070,7 +1000,6 @@ subroutine zm_conv_evap(ncol,lchnk, &
    real ke_fac(pcols)
    !FA: initialize isinbnds and its gathered array
    isinbnds=.FALSE.
-!    isinbndsg=.FALSE.
 
 !FA
 ke_fac=1.0 ! 0 in protected regions and 1 outside
@@ -1118,8 +1047,7 @@ endif
 
 
 
-!           evpprec(i) = ke * (1._r8 - cldfrc(i,k)) * evplimit * sqrt(flxprec(i,k))
-!FA 12/3/18 no evaporation in protected regions
+!FA: no evaporation in protected regions
           evpprec(i) = ke_fac(i) * ke * (1._r8 - cldfrc(i,k)) * evplimit * sqrt(flxprec(i,k))
 
 !**********************************************************
@@ -2401,7 +2329,6 @@ subroutine buoyan_undilute(lchnk   ,ncol    , &
 !!! DILUTE PLUME CALCULATION USING ENTRAINING PLUME !!!
 !!!   RBN 9/9/04   !!!
 
-!    call parcel_dilute(lchnk, ncol, msg, mx, p, t, q, tpert, tp, tpv, qstp, pl, tl, lcl)
 !FA
    call parcel_undilute(lchnk, ncol, msg, mx, p, t, q, tpert, tp, tpv, qstp, pl, tl, lcl)
 
@@ -2481,321 +2408,6 @@ subroutine buoyan_undilute(lchnk   ,ncol    , &
 !
    return
 end subroutine buoyan_undilute
-
-! subroutine buoyan_undilute(lchnk   ,ncol    , &
-!                   q       ,t       ,p       ,z       ,pf      , &
-!                   tp      ,qstp    ,tl      ,rl      ,cape    , &
-!                   pblt    ,lcl     ,lel     ,lon     ,mx      , &
-!                   rd      ,grav    ,cp      ,msg     , &
-!                   tpert   )
-! !----------------------------------------------------------------------- 
-! ! 
-! ! Purpose: 
-! ! FA: Using the CESM buoyan subroutine to compute an undilute CAPE 
-! ! Method: 
-! ! <Describe the algorithm(s) used in the routine.> 
-! ! <Also include any applicable external references.> 
-! ! 
-! ! Author:
-! ! This is contributed code not fully standardized by the CCM core group.
-! ! The documentation has been enhanced to the degree that we are able.
-! ! Reviewed:          P. Rasch, April 1996
-! ! 
-! !-----------------------------------------------------------------------
-!    implicit none
-! !-----------------------------------------------------------------------
-! !
-! ! input arguments
-! !
-!    integer, intent(in) :: lchnk                 ! chunk identifier
-!    integer, intent(in) :: ncol                  ! number of atmospheric columns
-! 
-!    real(r8), intent(in) :: q(pcols,pver)        ! spec. humidity
-!    real(r8), intent(in) :: t(pcols,pver)        ! temperature
-!    real(r8), intent(in) :: p(pcols,pver)        ! pressure
-!    real(r8), intent(in) :: z(pcols,pver)        ! height
-!    real(r8), intent(in) :: pf(pcols,pver+1)     ! pressure at interfaces
-!    real(r8), intent(in) :: pblt(pcols)          ! index of pbl depth
-!    real(r8), intent(in) :: tpert(pcols)         ! perturbation temperature by pbl processes
-! 
-! !
-! ! output arguments
-! !
-!    real(r8) :: tp(pcols,pver)       ! parcel temperature
-!    real(r8) :: qstp(pcols,pver)     ! saturation mixing ratio of parcel
-!    real(r8) :: tl(pcols)            ! parcel temperature at lcl
-!    real(r8), intent(out) :: cape(pcols)          ! convective aval. pot. energy.
-!    integer lcl(pcols)        !
-!    integer lel(pcols)        !
-!    integer lon(pcols)        ! level of onset of deep convection
-!    integer mx(pcols)         ! level of max moist static energy
-! !
-! !--------------------------Local Variables------------------------------
-! !
-!    real(r8) capeten(pcols,5)     ! provisional value of cape
-!    real(r8) tv(pcols,pver)       !
-!    real(r8) tpv(pcols,pver)      !
-!    real(r8) buoy(pcols,pver)
-! 
-!    real(r8) a1(pcols)
-!    real(r8) a2(pcols)
-!    real(r8) estp(pcols)
-!    real(r8) pl(pcols)
-!    real(r8) plexp(pcols)
-!    real(r8) hmax(pcols)
-!    real(r8) hmn(pcols)
-!    real(r8) y(pcols)
-! 
-!    logical plge600(pcols)
-!    integer knt(pcols)
-!    integer lelten(pcols,5)
-! 
-!    real(r8) cp
-!    real(r8) e
-!    real(r8) grav
-! 
-!    integer i
-!    integer k
-!    integer msg
-!    integer n
-! 
-!    real(r8) rd
-!    real(r8) rl
-! #ifdef PERGRO
-!    real(r8) rhd
-! #endif
-! !
-! !-----------------------------------------------------------------------
-! !
-!    do n = 1,5
-!       do i = 1,ncol
-!          lelten(i,n) = pver
-!          capeten(i,n) = 0._r8
-!       end do
-!    end do
-! !
-!    do i = 1,ncol
-!       lon(i) = pver
-!       knt(i) = 0
-!       lel(i) = pver
-!       mx(i) = lon(i)
-!       cape(i) = 0._r8
-!       hmax(i) = 0._r8
-!    end do
-! 
-!    tp(:ncol,:) = t(:ncol,:)
-!    qstp(:ncol,:) = q(:ncol,:)
-! 
-! !!! RBN - Initialize tv and buoy for output.
-! !!! tv=tv : tpv=tpv : qstp=q : buoy=0.
-!    tv(:ncol,:) = t(:ncol,:) *(1._r8+1.608_r8*q(:ncol,:))/ (1._r8+q(:ncol,:))
-!    tpv(:ncol,:) = tv(:ncol,:)
-!    buoy(:ncol,:) = 0._r8
-! 
-! !
-! ! set "launching" level(mx) to be at maximum moist static energy.
-! ! search for this level stops at planetary boundary layer top.
-! !
-! #ifdef PERGRO
-!    do k = pver,msg + 1,-1
-!       do i = 1,ncol
-!          hmn(i) = cp*t(i,k) + grav*z(i,k) + rl*q(i,k)
-! !
-! ! Reset max moist static energy level when relative difference exceeds 1.e-4
-! !
-!          rhd = (hmn(i) - hmax(i))/(hmn(i) + hmax(i))
-!          if (k >= nint(pblt(i)) .and. k <= lon(i) .and. rhd > -1.e-4_r8) then
-!             hmax(i) = hmn(i)
-!             mx(i) = k
-!          end if
-!       end do
-!    end do
-! #else
-!    do k = pver,msg + 1,-1
-!       do i = 1,ncol
-!          hmn(i) = cp*t(i,k) + grav*z(i,k) + rl*q(i,k)
-!          if (k >= nint(pblt(i)) .and. k <= lon(i) .and. hmn(i) > hmax(i)) then
-!             hmax(i) = hmn(i)
-!             mx(i) = k
-!          end if
-!       end do
-!    end do
-! #endif
-! !
-!    do i = 1,ncol
-!       lcl(i) = mx(i)
-!       e = p(i,mx(i))*q(i,mx(i))/ (eps1+q(i,mx(i)))
-!       tl(i) = 2840._r8/ (3.5_r8*log(t(i,mx(i)))-log(e)-4.805_r8) + 55._r8
-!       if (tl(i) < t(i,mx(i))) then
-!          plexp(i) = (1._r8/ (0.2854_r8* (1._r8-0.28_r8*q(i,mx(i)))))
-!          pl(i) = p(i,mx(i))* (tl(i)/t(i,mx(i)))**plexp(i)
-!       else
-!          tl(i) = t(i,mx(i))
-!          pl(i) = p(i,mx(i))
-!       end if
-!    end do
-! 
-! !
-! ! calculate lifting condensation level (lcl).
-! !
-!    do k = pver,msg + 2,-1
-!       do i = 1,ncol
-!          if (k <= mx(i) .and. (p(i,k) > pl(i) .and. p(i,k-1) <= pl(i))) then
-!             lcl(i) = k - 1
-!          end if
-!       end do
-!    end do
-! !
-! ! if lcl is above the nominal level of non-divergence (600 mbs),
-! ! no deep convection is permitted (ensuing calculations
-! ! skipped and cape retains initialized value of zero).
-! !
-!    do i = 1,ncol
-!       plge600(i) = pl(i).ge.600._r8
-!    end do
-! !
-! ! initialize parcel properties in sub-cloud layer below lcl.
-! !
-!    do k = pver,msg + 1,-1
-!       do i=1,ncol
-!          if (k > lcl(i) .and. k <= mx(i) .and. plge600(i)) then
-!             tv(i,k) = t(i,k)* (1._r8+1.608_r8*q(i,k))/ (1._r8+q(i,k))
-!             qstp(i,k) = q(i,mx(i))
-!             tp(i,k) = t(i,mx(i))* (p(i,k)/p(i,mx(i)))**(0.2854_r8* (1._r8-0.28_r8*q(i,mx(i))))
-! !
-! ! buoyancy is increased by 0.5 k as in tiedtke
-! !
-! !-jjh          tpv (i,k)=tp(i,k)*(1.+1.608*q(i,mx(i)))/
-! !-jjh     1                     (1.+q(i,mx(i)))
-!             tpv(i,k) = (tp(i,k)+tpert(i))*(1._r8+1.608_r8*q(i,mx(i)))/ (1._r8+q(i,mx(i)))
-!             buoy(i,k) = tpv(i,k) - tv(i,k) + tiedke_add 
-!             !FA: No Tiedke addition to our undilute cape, 
-!          end if
-!       end do
-!    end do
-! 
-! !
-! ! define parcel properties at lcl (i.e. level immediately above pl).
-! !
-!    do k = pver,msg + 1,-1
-!       do i=1,ncol
-!          if (k == lcl(i) .and. plge600(i)) then
-!             tv(i,k) = t(i,k)* (1._r8+1.608_r8*q(i,k))/ (1._r8+q(i,k))
-!             qstp(i,k) = q(i,mx(i))
-!             tp(i,k) = tl(i)* (p(i,k)/pl(i))**(0.2854_r8* (1._r8-0.28_r8*qstp(i,k)))
-! !              estp(i)  =exp(21.656_r8 - 5418._r8/tp(i,k))
-! ! use of different formulas for es has about 1 g/kg difference
-! ! in qs at t= 300k, and 0.02 g/kg at t=263k, with the formula
-! ! above giving larger qs.
-!             call qmmr_hPa(tp(i,k), p(i,k), estp(i), qstp(i,k))
-!             a1(i) = cp / rl + qstp(i,k) * (1._r8+ qstp(i,k) / eps1) * rl * eps1 / &
-!                     (rd * tp(i,k) ** 2)
-!             a2(i) = .5_r8* (qstp(i,k)* (1._r8+2._r8/eps1*qstp(i,k))* &
-!                     (1._r8+qstp(i,k)/eps1)*eps1**2*rl*rl/ &
-!                     (rd**2*tp(i,k)**4)-qstp(i,k)* &
-!                     (1._r8+qstp(i,k)/eps1)*2._r8*eps1*rl/ &
-!                     (rd*tp(i,k)**3))
-!             a1(i) = 1._r8/a1(i)
-!             a2(i) = -a2(i)*a1(i)**3
-!             y(i) = q(i,mx(i)) - qstp(i,k)
-!             tp(i,k) = tp(i,k) + a1(i)*y(i) + a2(i)*y(i)**2
-!             call qmmr_hPa(tp(i,k), p(i,k), estp(i), qstp(i,k))
-! !
-! ! buoyancy is increased by 0.5 k in cape calculation.
-! ! dec. 9, 1994
-! !-jjh          tpv(i,k) =tp(i,k)*(1.+1.608*qstp(i,k))/(1.+q(i,mx(i)))
-! !
-!             tpv(i,k) = (tp(i,k)+tpert(i))* (1._r8+1.608_r8*qstp(i,k)) / (1._r8+q(i,mx(i)))
-!             buoy(i,k) = tpv(i,k) - tv(i,k) + tiedke_add
-!          end if
-!       end do
-!    end do
-! !
-! ! main buoyancy calculation.
-! !
-!    do k = pver - 1,msg + 1,-1
-!       do i=1,ncol
-!          if (k < lcl(i) .and. plge600(i)) then
-!             tv(i,k) = t(i,k)* (1._r8+1.608_r8*q(i,k))/ (1._r8+q(i,k))
-!             qstp(i,k) = qstp(i,k+1)
-!             tp(i,k) = tp(i,k+1)* (p(i,k)/p(i,k+1))**(0.2854_r8* (1._r8-0.28_r8*qstp(i,k)))
-!             call qmmr_hPa(tp(i,k), p(i,k), estp(i), qstp(i,k))
-!             a1(i) = cp/rl + qstp(i,k)* (1._r8+qstp(i,k)/eps1)*rl*eps1/ (rd*tp(i,k)**2)
-!             a2(i) = .5_r8* (qstp(i,k)* (1._r8+2._r8/eps1*qstp(i,k))* &
-!                     (1._r8+qstp(i,k)/eps1)*eps1**2*rl*rl/ &
-!                     (rd**2*tp(i,k)**4)-qstp(i,k)* &
-!                     (1._r8+qstp(i,k)/eps1)*2._r8*eps1*rl/ &
-!                     (rd*tp(i,k)**3))
-!             a1(i) = 1._r8/a1(i)
-!             a2(i) = -a2(i)*a1(i)**3
-!             y(i) = qstp(i,k+1) - qstp(i,k)
-!             tp(i,k) = tp(i,k) + a1(i)*y(i) + a2(i)*y(i)**2
-!             call qmmr_hPa(tp(i,k), p(i,k), estp(i), qstp(i,k))
-! !-jjh          tpv(i,k) =tp(i,k)*(1.+1.608*qstp(i,k))/
-! !jt            (1.+q(i,mx(i)))
-!             tpv(i,k) = (tp(i,k)+tpert(i))* (1._r8+1.608_r8*qstp(i,k))/(1._r8+q(i,mx(i)))
-!             buoy(i,k) = tpv(i,k) - tv(i,k) + tiedke_add
-!             !FA
-!          end if
-!       end do
-!    end do
-! 
-! !
-!    do k = msg + 2,pver
-!       do i = 1,ncol
-!          if (k < lcl(i) .and. plge600(i)) then
-!             if (buoy(i,k+1) > 0._r8 .and. buoy(i,k) <= 0._r8) then
-!                knt(i) = min(5,knt(i) + 1)
-!                lelten(i,knt(i)) = k
-!             end if
-!          end if
-!       end do
-!    end do
-! !
-! ! calculate convective available potential energy (cape).
-! !
-!    do n = 1,5
-!       do k = msg + 1,pver
-!          do i = 1,ncol
-!             if (plge600(i) .and. k <= mx(i) .and. k > lelten(i,n)) then
-!                capeten(i,n) = capeten(i,n) + rd*buoy(i,k)*log(pf(i,k+1)/pf(i,k))
-!             end if
-!          end do
-!       end do
-!    end do
-! !
-! ! find maximum cape from all possible tentative capes from
-! ! one sounding,
-! ! and use it as the final cape, april 26, 1995
-! !
-!    do n = 1,5
-!       do i = 1,ncol
-!          if (capeten(i,n) > cape(i)) then
-!             cape(i) = capeten(i,n)
-!             lel(i) = lelten(i,n)
-!          end if
-!       end do
-!    end do
-! !
-! ! put lower bound on cape for diagnostic purposes.
-! !
-!    do i = 1,ncol
-!       cape(i) = max(cape(i), 0._r8)
-!    end do
-! !
-!    return
-! end subroutine buoyan_undilute
-
-! subroutine cldprp(lchnk   , &
-!                   q       ,t       ,u       ,v       ,p       , &
-!                   z       ,s       ,mu      ,eu      ,du      , &
-!                   md      ,ed      ,sd      ,qd      ,mc      , &
-!                   qu      ,su      ,zf      ,qst     ,hmn     , &
-!                   hsat    ,shat    ,ql      , &
-!                   cmeg    ,jb      ,lel     ,jt      ,jlcl    , &
-!                   mx      ,j0      ,jd      ,rl      ,il2g    , &
-!                   rd      ,grav    ,cp      ,msg     , &
-!                   pflx    ,evp     ,cu      ,rprd    ,limcnv  ,landfrac)
 
 !FA
 subroutine cldprp(lchnk   , &
@@ -3087,14 +2699,6 @@ subroutine cldprp(lchnk   , &
    end do
 
 
-! FA: Set starting mse to sat. mse in protected regions
-! do i = 1,il2g
-! 	if ((procon_cldprp).and.(isinbnds(i))) then
-! 		hmn(i,mx(i))=hsat(i,mx(i))
-! 	endif
-! end do
-
-
 !
 ! find the level of minimum hsat, where detrainment starts
 !
@@ -3123,15 +2727,8 @@ subroutine cldprp(lchnk   , &
       do i = 1,il2g
          if (k >= jt(i) .and. k <= jb(i)) then
 
-! 			FA: a test of the importance of the starting MSE
-! 			if ((procon_cldprp).and.(isinbnds(i))) then
-! 
-! 				hu(i,k) = hsat(i,mx(i)) + cp*tiedke_add
-! 				su(i,k) = s(i,mx(i)) + tiedke_add
-! 			else
 				hu(i,k) = hmn(i,mx(i)) + cp*tiedke_add
 				su(i,k) = s(i,mx(i)) + tiedke_add
-! 			endif			
 			
 
 
@@ -3147,14 +2744,7 @@ subroutine cldprp(lchnk   , &
       do i = 1,il2g
          if (k < jb(i) .and. k >= jt(i)) then
          
-			!FA: If in protected region, use hsat to compute plume entrainment
-			!rate eps(z)  
-	    
-! 			if ((procon_cldprp).and.(isinbnds(i))) then
-! 	            k1(i,k) = k1(i,k+1) + (hmn(i,mx(i))-hsat(i,k))*dz(i,k)
-! 			else
 		        k1(i,k) = k1(i,k+1) + (hmn(i,mx(i))-hmn(i,k))*dz(i,k)
-!     		endif
     
             ihat(i,k) = 0.5_r8* (k1(i,k+1)+k1(i,k))
             i2(i,k) = i2(i,k+1) + ihat(i,k)*dz(i,k)
@@ -3276,8 +2866,6 @@ subroutine cldprp(lchnk   , &
       end if
    end do
    
-   !FA: what if we directly set eps0(i)=0.0 ? 
-   ! Then updraft properties are the same as env. properties
    
    do k = pver,msg + 1,-1
       do i = 1,il2g
@@ -3306,7 +2894,7 @@ subroutine cldprp(lchnk   , &
                eu(i,k) = 0._r8
                du(i,k) = mu(i,k+1)/dz(i,k)
             else
-            !FA: here is where we make the updraft ensemble entrain saturated air
+            !FA: Here, we make the updraft ensemble entrain saturated air
 
 			if ((procon_cldprp).and.(isinbnds(i))) then
                hu(i,k) = mu(i,k+1)/mu(i,k)*hu(i,k+1) + &
@@ -3462,11 +3050,7 @@ subroutine cldprp(lchnk   , &
       do i = 1,il2g
          if (k == jb(i) .and. eps0(i) > 0._r8) then
          
-!          	if ((procon_cldprp).and.(isinbnds(i))) then
-!             	qu(i,k) = qst(i,mx(i))
-!          	else
 	            qu(i,k) = q(i,mx(i))
-! 			endif
 			
             su(i,k) = (hu(i,k)-rl*qu(i,k))/cp
          end if
@@ -3500,8 +3084,6 @@ subroutine cldprp(lchnk   , &
       do i = 1,il2g
          if ((k > jt(i) .and. k <= jlcl(i)) .and. eps0(i) > 0._r8) then
 
-			!FA: what should we do about su, qu etc.?
-
             su(i,k) = shat(i,k) + (hu(i,k)-hsthat(i,k))/(cp* (1._r8+gamhat(i,k)))
             qu(i,k) = qsthat(i,k) + gamhat(i,k)*(hu(i,k)-hsthat(i,k))/ &
                      (rl* (1._r8+gamhat(i,k)))
@@ -3514,13 +3096,8 @@ subroutine cldprp(lchnk   , &
       do i = 1,il2g
          if (k >= jt(i) .and. k < jb(i) .and. eps0(i) > 0._r8) then
 
-			!FA : use qu to compute condensate in protected regions
-! 			if ((procon_cldprp) .and. (isinbnds(i))) then
-! 	            cu(i,k) = (eu(i,k)-du(i,k))*qst(i,k)-( mu(i,k)*qu(i,k)-mu(i,k+1)*qu(i,k+1) )/dz(i,k)
-! 			else
 				cu(i,k) = ((mu(i,k)*su(i,k)-mu(i,k+1)*su(i,k+1))/ &
 						  dz(i,k)- (eu(i,k)-du(i,k))*s(i,k))/(rl/cp)
-! 			endif
 			
 
             if (k == jt(i)) cu(i,k) = 0._r8
@@ -3715,11 +3292,6 @@ subroutine closure(lchnk   , &
    integer, intent(in) :: jt(pcols)         ! top of updraft
    integer, intent(in) :: mx(pcols)         ! base of updraft
 !    
-!    FA:
-!    logical, intent(in) :: isinbnds(pcols)
-!    real(r8), intent(in) :: that(pcols,pver)     ! env. temperature at intrfcs
-!    real(r8) qshat(pcols,pver)     ! env. sat. q at intrfcs
-
 !
 !--------------------------Local variables------------------------------
 !
@@ -3778,10 +3350,6 @@ subroutine closure(lchnk   , &
       do i = il1g,il2g
          dtmdt(i,k) = 0._r8
          dqmdt(i,k) = 0._r8
-!          FA
-! 	     penv=(p(i,k)+p(i,k-1))*0.5
-! 		 call qmmr_hPa(that(i,k),penv,es_hat,qshat(i,k))
-
       end do
    end do
 !
@@ -4443,7 +4011,7 @@ do k = pver, msg+1, -1
 ! entrains q,s out of intervening dp layers, in which linear variation is assumed
 ! so really it entrains the mean of the 2 stored values.
 
-!! FA - 01/23/18; get the saturation specific humidity
+!! FA - get the saturation specific humidity
 !! of the environment and mix at each level
 !! Enforce this for the protected regions only
  
@@ -4709,8 +4277,6 @@ real(r8) slcl,qtlcl,qslcl    ! LCL s, qt, qs values.
 integer rcall       ! Number of ientropy call for errors recording
 integer nit_lheat     ! Number of iterations for condensation/freezing loop.
 integer i,k,ii,jj   ! Loop counters.
-
-!FA: local variables
 
 real(r8) es_env, qs_env , senv_sat
 
@@ -5010,9 +4576,7 @@ end FUNCTION entropy
      real(r8) :: this_lat,this_lon
      integer :: LOOPMAX,i,j
 
-! FA: Changing loopmax to poke at solving the instability error
 LOOPMAX = 100                   !* max number of iteration loops 
-! LOOPMAX = 10000                   !* max number of iteration loops 
 
 
 ! Values for entropy
@@ -5115,7 +4679,6 @@ qv = min(qt,qst)                             !       /* check for saturation */
 T = Ts 
 
 !FA
-!  100    format (A,I1,I4,I4,7(A,F6.2))
  100    format (A,I2,I4,I4,7(A,F6.2),(A,I4),4(A,F6.2),(A,I6))
 
 return
