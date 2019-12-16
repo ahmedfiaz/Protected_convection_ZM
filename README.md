@@ -12,13 +12,13 @@ protections in two separate places within the code by:
       
   ii) Make the updrafts and downdrafts interact with saturated air in the subroutine 'cldprp'. 
   
-  The code uses Newton's method to inverting the plume entropy to deduce temperature, which sometimes fails to converge. In case of failure, the code switches to Halley's method (which has not yet failed).
+  The code uses Newton's method to invert the plume entropy to deduce temperature, which sometimes fails to converge. In case of failure, the code switches to Halley's method (which has not yet failed).
   
   Search for !FA within the code to examine all the modifications. 
   
-  To run these codes in your version of CAM/CEMS. Place 
+  To run these codes in your version of CAM/CESM, place: 
    
    i) user_nl_cam in your case directory (CASE_DIR)
    
-   ii)namelist_definition.xml, zm_conv.F90 and zm_conv_intr.F90 in CASE_DIR/SourceMods/src.cam,
+   ii) namelist_definition.xml, zm_conv.F90 and zm_conv_intr.F90 in CASE_DIR/SourceMods/src.cam,
    and build.
